@@ -39,7 +39,7 @@ public class LoginDTO {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("AuthDTO{");
+        StringBuilder builder = new StringBuilder("LoginDTO{");
         builder.append("usernameOrEmail='").append(usernameOrEmail).append('\'');
         builder.append(", password='").append(password).append('\'');
         builder.append('}');

@@ -4,6 +4,7 @@ import com.my.ims.model.AuthVO;
 import com.my.ims.model.JwtResponseDTO;
 import com.my.ims.model.LoginDTO;
 import com.my.ims.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,17 +22,15 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Operation( summary = "login", tags = { "auth-controller" })
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDTO loginDTO){
+    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDTO loginDTO) throws Exception {
+
+        log.info("REST login request: {}", loginDTO);
 
         AuthVO authVO = new AuthVO();
         authVO.setLoginDTO(loginDTO);
-
-        try {
-            authVO = authService.login(authVO);
-        } catch (Exception e) {
-            System.out.println(e);
-        }
+        authVO = authService.login(authVO);
 
         return new ResponseEntity<>(authVO.getJwtResponseDTO(), HttpStatus.OK);
     }

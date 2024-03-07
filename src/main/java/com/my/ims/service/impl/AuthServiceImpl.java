@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthVO login(AuthVO authVO) {
 
         LoginDTO loginDTO = authVO.getLoginDTO();
-        log.debug("REST request to authenticate user: {}", loginDTO);
+        log.debug("Request to authenticate user");
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsernameOrEmail(),

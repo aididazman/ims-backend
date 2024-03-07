@@ -22,22 +22,14 @@ import org.springframework.stereotype.Component;
 @EntityScan("com.my.ims.domain")
 @OpenAPIDefinition(
 		info = @Info(
-				title = "Spring Boot REST API Documentation",
-				description = "Spring Boot REST API Documentation",
+				title = "IMS back-end",
+				description = "IMS back-end REST API Documentation",
 				version = "v1.0",
 				contact = @Contact(
-						name = "Ramesh",
-						email = "javaguides.net@gmail.com",
-						url = "https://www.javaguides.net"
-				),
-				license = @License(
-						name = "Apache 2.0",
-						url = "https://www.javaguides.net/license"
+						name = "Muhammad Aidid",
+						email = "aididazman98@gmail.com",
+						url = "https://www.linkedin.com/in/muhammadaididazman/"
 				)
-		),
-		externalDocs = @ExternalDocumentation(
-				description = "Spring Boot User Management Documentation",
-				url = "https://www.javaguides.net/user_management.html"
 		)
 )
 public class ImsBackendApplication {
