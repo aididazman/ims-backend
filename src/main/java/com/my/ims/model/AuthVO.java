@@ -1,8 +1,12 @@
 package com.my.ims.model;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class AuthVO {
+public class AuthVO implements Serializable {
+
+    private static final long serialVersionUID = 1870007915844573799L;
 
     private LoginDTO loginDTO;
     private JwtResponseDTO jwtResponseDTO;

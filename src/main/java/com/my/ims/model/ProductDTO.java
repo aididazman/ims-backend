@@ -5,23 +5,24 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
 
-public class InventoryDTO implements Serializable {
+public class ProductDTO implements Serializable {
 
     private static final long serialVersionUID = -2397678789843128779L;
 
-    private String pkInventoryId;
+    private String pkProductId;
     private String name;
     private String description;
     private Long quantity;
     private BigDecimal price;
     private String category;
+    private SupplierDTO supplierDTO;
 
-    public String getPkInventoryId() {
-        return pkInventoryId;
+    public String getPkProductId() {
+        return pkProductId;
     }
 
-    public void setPkInventoryId(String pkInventoryId) {
-        this.pkInventoryId = pkInventoryId;
+    public void setPkProductId(String pkProductId) {
+        this.pkProductId = pkProductId;
     }
 
     public String getName() {
@@ -64,28 +65,43 @@ public class InventoryDTO implements Serializable {
         this.category = category;
     }
 
+    public SupplierDTO getSupplierDTO() {
+        return supplierDTO;
+    }
+
+    public void setSupplierDTO(SupplierDTO supplierDTO) {
+        this.supplierDTO = supplierDTO;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InventoryDTO that = (InventoryDTO) o;
-        return Objects.equals(pkInventoryId, that.pkInventoryId) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(quantity, that.quantity) && Objects.equals(price, that.price) && Objects.equals(category, that.category);
+        ProductDTO that = (ProductDTO) o;
+        return Objects.equals(pkProductId, that.pkProductId)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(quantity, that.quantity)
+                && Objects.equals(price, that.price)
+                && Objects.equals(category, that.category)
+                && Objects.equals(supplierDTO, that.supplierDTO);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pkInventoryId, name, description, quantity, price, category);
+        return Objects.hash(pkProductId, name, description, quantity, price, category, supplierDTO);
     }
 
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder("InventoryDTO{");
-        builder.append("pkInventoryId='").append(pkInventoryId).append('\'');
+        final StringBuilder builder = new StringBuilder("ProductDTO{");
+        builder.append("pkProductId='").append(pkProductId).append('\'');
         builder.append(", name='").append(name).append('\'');
         builder.append(", description='").append(description).append('\'');
         builder.append(", quantity=").append(quantity);
         builder.append(", price=").append(price);
         builder.append(", category='").append(category).append('\'');
+        builder.append(", supplierDTO=").append(supplierDTO);
         builder.append('}');
         return builder.toString();
     }
