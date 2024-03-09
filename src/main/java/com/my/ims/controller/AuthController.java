@@ -24,7 +24,7 @@ public class AuthController {
 
     @Operation( summary = "login", tags = { "auth-controller" })
     @PostMapping("/login")
-    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDTO loginDTO) throws Exception {
+    public ResponseEntity<JwtResponseDTO> login(@RequestBody LoginDTO loginDTO) {
 
         log.info("REST login request: {}", loginDTO);
 

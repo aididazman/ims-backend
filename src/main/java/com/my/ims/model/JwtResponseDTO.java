@@ -1,8 +1,11 @@
 package com.my.ims.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class JwtResponseDTO {
+public class JwtResponseDTO implements Serializable {
+
+    private static final long serialVersionUID = -6664840066258799658L;
 
     private String accessToken;
     private String tokenType = "Bearer";

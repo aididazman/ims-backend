@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SupplierServiceImpl implements SupplierService {
     @Override
-    public InventoryVO createSupplier(InventoryVO inventoryVO) {
+    public InventoryVO createOrUpdateSupplier(InventoryVO inventoryVO) {
         return null;
     }
 
@@ -22,7 +22,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public InventoryVO deleteSupplier(InventoryVO inventoryVO) {
+    public InventoryVO deleteSupplierByIds(InventoryVO inventoryVO) {
         return null;
     }
 }

@@ -1,6 +1,5 @@
 package com.my.ims.model;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 

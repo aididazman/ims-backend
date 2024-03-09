@@ -1,8 +1,11 @@
 package com.my.ims.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class LoginDTO {
+public class LoginDTO implements Serializable {
+
+    private static final long serialVersionUID = -6903083036467582631L;
 
     private String usernameOrEmail;
     private String password;

@@ -6,8 +6,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
     @Override
-    public InventoryVO createProduct(InventoryVO inventoryVO) {
+    public InventoryVO createOrUpdateProduct(InventoryVO inventoryVO) {
         return null;
     }
 
@@ -22,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public InventoryVO deleteProduct(InventoryVO inventoryVO) {
+    public InventoryVO deleteProductByIds(InventoryVO inventoryVO) {
         return null;
     }
 }
