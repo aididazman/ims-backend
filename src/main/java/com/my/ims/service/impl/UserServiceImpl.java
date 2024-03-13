@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         TbTUser tbTUser = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not exists by Username or Email"));
 
-        Set<GrantedAuthority> authorities = tbTUser.getTbTRole().stream()
+        Set<GrantedAuthority> authorities = tbTUser.getTbTRoleList().stream()
                 .map((role) -> new SimpleGrantedAuthority(role.getRoleName()))
                 .collect(Collectors.toSet());
 

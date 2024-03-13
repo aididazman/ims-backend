@@ -1,5 +1,7 @@
 package com.my.ims.model;
 
+import org.springframework.ui.Model;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -11,10 +13,12 @@ public class InventoryVO implements Serializable {
     private String pkProductId;
     private List<String> pkProductList;
     private ProductDTO productDTO;
+    private List<ProductDTO> productListDTO;
 
     private String pkSupplierId;
     private List<String> pkSupplierList;
     private SupplierDTO supplierDTO;
+    private List<SupplierDTO> supplierListDTO;
 
     private InventoryItemDTO inventoryItemDTO;
     private List<InventoryItemDTO> inventoryItemListDTO;
@@ -83,6 +87,22 @@ public class InventoryVO implements Serializable {
         this.inventoryItemListDTO = inventoryItemListDTO;
     }
 
+    public List<ProductDTO> getProductListDTO() {
+        return productListDTO;
+    }
+
+    public void setProductListDTO(List<ProductDTO> productListDTO) {
+        this.productListDTO = productListDTO;
+    }
+
+    public List<SupplierDTO> getSupplierListDTO() {
+        return supplierListDTO;
+    }
+
+    public void setSupplierListDTO(List<SupplierDTO> supplierListDTO) {
+        this.supplierListDTO = supplierListDTO;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -91,17 +111,19 @@ public class InventoryVO implements Serializable {
         return Objects.equals(pkProductId, that.pkProductId)
                 && Objects.equals(pkProductList, that.pkProductList)
                 && Objects.equals(productDTO, that.productDTO)
+                && Objects.equals(productListDTO, that.productListDTO)
                 && Objects.equals(pkSupplierId, that.pkSupplierId)
                 && Objects.equals(pkSupplierList, that.pkSupplierList)
                 && Objects.equals(supplierDTO, that.supplierDTO)
+                && Objects.equals(supplierListDTO, that.supplierListDTO)
                 && Objects.equals(inventoryItemDTO, that.inventoryItemDTO)
                 && Objects.equals(inventoryItemListDTO, that.inventoryItemListDTO);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pkProductId, pkProductList, productDTO, pkSupplierId,
-                pkSupplierList, supplierDTO, inventoryItemDTO, inventoryItemListDTO);
+        return Objects.hash(pkProductId, pkProductList, productDTO, productListDTO, pkSupplierId,
+                pkSupplierList, supplierDTO, inventoryItemDTO, inventoryItemListDTO, supplierListDTO);
     }
 
     @Override
@@ -110,9 +132,11 @@ public class InventoryVO implements Serializable {
         sb.append("pkProductId='").append(pkProductId).append('\'');
         sb.append(", pkProductList=").append(pkProductList);
         sb.append(", productDTO=").append(productDTO);
+        sb.append(", productListDTO=").append(productListDTO);
         sb.append(", pkSupplierId='").append(pkSupplierId).append('\'');
         sb.append(", pkSupplierList=").append(pkSupplierList);
         sb.append(", supplierDTO=").append(supplierDTO);
+        sb.append(", supplierListDTO=").append(supplierListDTO);
         sb.append(", inventoryItemDTO=").append(inventoryItemDTO);
         sb.append(", inventoryItemListDTO=").append(inventoryItemListDTO);
         sb.append('}');

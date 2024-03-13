@@ -1,12 +1,14 @@
 package com.my.ims.domain.inventory;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.my.ims.domain.base.BaseDomain;
 import com.my.ims.util.constants.TableConstants;
 import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import java.io.Serial;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = TableConstants.TB_T_SUPPLIER)
@@ -25,6 +27,9 @@ public class TbTSupplier extends BaseDomain {
 
     @Column(name = "contact_info")
     private String contactInfo;
+
+    @Column(name = "status")
+    private Boolean status;
 
     public String getPkSupplierId() {
         return pkSupplierId;
@@ -50,27 +55,39 @@ public class TbTSupplier extends BaseDomain {
         this.contactInfo = contactInfo;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         TbTSupplier that = (TbTSupplier) o;
-        return Objects.equals(pkSupplierId, that.pkSupplierId) && Objects.equals(name, that.name) && Objects.equals(contactInfo, that.contactInfo);
+        return Objects.equals(pkSupplierId, that.pkSupplierId)
+                && Objects.equals(name, that.name)
+                && Objects.equals(contactInfo, that.contactInfo)
+                && Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), pkSupplierId, name, contactInfo);
+        return Objects.hash(super.hashCode(), pkSupplierId, name, contactInfo, status);
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("TbTSupplier{");
-        builder.append("pkSupplierId='").append(pkSupplierId).append('\'');
-        builder.append(", name='").append(name).append('\'');
-        builder.append(", contactInfo='").append(contactInfo).append('\'');
-        builder.append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("TbTSupplier{");
+        sb.append("pkSupplierId='").append(pkSupplierId).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", contactInfo='").append(contactInfo).append('\'');
+        sb.append(", status=").append(status);
+        sb.append('}');
+        return sb.toString();
     }
 }

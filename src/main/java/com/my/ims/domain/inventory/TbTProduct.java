@@ -40,13 +40,13 @@ public class TbTProduct extends BaseDomain {
     @Column(name = "status")
     private Boolean status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = TableConstants.TB_M_PRODUCTSUPPLY,  // Name of the join table
             joinColumns = @JoinColumn(name = "product_id"),  // Name of the foreign key column for User
             inverseJoinColumns = @JoinColumn(name = "supply_id")  // Name of the foreign key column for Role
     )
-    private Set<TbTSupplier> tbTSupplier = new HashSet<>();
+    private Set<TbTSupplier> tbTSupplierList = new HashSet<>();
 
     public String getPkProductId() {
         return pkProductId;
@@ -104,6 +104,19 @@ public class TbTProduct extends BaseDomain {
         this.status = status;
     }
 
+    public Set<TbTSupplier> getTbTSupplierList() {
+        return tbTSupplierList;
+    }
+
+    public void setTbTSupplierList(Set<TbTSupplier> tbTSupplierList) {
+        this.tbTSupplierList = tbTSupplierList;
+    }
+
+    public TbTProduct addSupplier(TbTSupplier tbTSupplier) {
+        this.tbTSupplierList.add(tbTSupplier);
+        return this;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -116,25 +129,28 @@ public class TbTProduct extends BaseDomain {
                 && Objects.equals(quantity, that.quantity)
                 && Objects.equals(price, that.price)
                 && Objects.equals(category, that.category)
-                && Objects.equals(status, that.status);
+                && Objects.equals(status, that.status)
+                && Objects.equals(tbTSupplierList, that.tbTSupplierList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), pkProductId, productName, description, quantity, price, category, status);
+        return Objects.hash(super.hashCode(), pkProductId, productName, description, quantity,
+                price, category, status, tbTSupplierList);
     }
 
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder("TbTInventory{");
-        builder.append("pkProductId='").append(pkProductId).append('\'');
-        builder.append(", productName='").append(productName).append('\'');
-        builder.append(", description='").append(description).append('\'');
-        builder.append(", quantity=").append(quantity);
-        builder.append(", price=").append(price);
-        builder.append(", category='").append(category).append('\'');
-        builder.append(", status=").append(status);
-        builder.append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("TbTProduct{");
+        sb.append("pkProductId='").append(pkProductId).append('\'');
+        sb.append(", productName='").append(productName).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", quantity=").append(quantity);
+        sb.append(", price=").append(price);
+        sb.append(", category='").append(category).append('\'');
+        sb.append(", status=").append(status);
+        sb.append(", tbTSupplierList=").append(tbTSupplierList);
+        sb.append('}');
+        return sb.toString();
     }
 }

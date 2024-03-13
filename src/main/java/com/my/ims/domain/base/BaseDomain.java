@@ -1,36 +1,42 @@
 package com.my.ims.domain.base;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import java.time.Instant;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.Objects;
 
+@MappedSuperclass
 public abstract class BaseDomain implements Serializable {
 
     private static final long serialVersionUID = 5411963629582360949L;
 
+    @CreatedDate
     @Column(name = "created_date", updatable = false)
-    private Date createdDate;
+    private Instant createdDate;
 
     @CreatedBy
     @Column(name = "created_by", updatable = false)
     private Long createdBy;
 
+    @LastModifiedDate
+    @Column(name = "modified_date")
+    private Instant modifiedDate;
+
     @LastModifiedBy
     @Column(name = "modified_by", length = 50)
-    private Date modifiedBy;
+    private Long modifiedBy;
 
-    @Column(name = "modified_date")
-    private Long modifiedDate;
-
-    public Date getCreatedDate() {
+    public Instant getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
+    public void setCreatedDate(Instant createdDate) {
         this.createdDate = createdDate;
     }
 
@@ -42,20 +48,20 @@ public abstract class BaseDomain implements Serializable {
         this.createdBy = createdBy;
     }
 
-    public Date getModifiedBy() {
-        return modifiedBy;
-    }
-
-    public void setModifiedBy(Date modifiedBy) {
-        this.modifiedBy = modifiedBy;
-    }
-
-    public Long getModifiedDate() {
+    public Instant getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Long modifiedDate) {
+    public void setModifiedDate(Instant modifiedDate) {
         this.modifiedDate = modifiedDate;
+    }
+
+    public Long getModifiedBy() {
+        return modifiedBy;
+    }
+
+    public void setModifiedBy(Long modifiedBy) {
+        this.modifiedBy = modifiedBy;
     }
 
     @Override
@@ -65,23 +71,23 @@ public abstract class BaseDomain implements Serializable {
         BaseDomain that = (BaseDomain) o;
         return Objects.equals(createdDate, that.createdDate)
                 && Objects.equals(createdBy, that.createdBy)
-                && Objects.equals(modifiedBy, that.modifiedBy)
-                && Objects.equals(modifiedDate, that.modifiedDate);
+                && Objects.equals(modifiedDate, that.modifiedDate)
+                && Objects.equals(modifiedBy, that.modifiedBy);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(createdDate, createdBy, modifiedBy, modifiedDate);
+        return Objects.hash(createdDate, createdBy, modifiedDate, modifiedBy);
     }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder("BaseDomain{");
-        builder.append("createdDate=").append(createdDate);
-        builder.append(", createdBy=").append(createdBy);
-        builder.append(", modifiedBy=").append(modifiedBy);
-        builder.append(", modifiedDate=").append(modifiedDate);
-        builder.append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("BaseDomain{");
+        sb.append("createdDate=").append(createdDate);
+        sb.append(", createdBy=").append(createdBy);
+        sb.append(", modifiedDate=").append(modifiedDate);
+        sb.append(", modifiedBy=").append(modifiedBy);
+        sb.append('}');
+        return sb.toString();
     }
 }

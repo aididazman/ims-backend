@@ -7,4 +7,5 @@ public interface SupplierService {
     InventoryVO getAllSupplier(InventoryVO inventoryVO);
     InventoryVO getSupplierById(InventoryVO inventoryVO);
     InventoryVO deleteSupplierByIds(InventoryVO inventoryVO);
+    InventoryVO getSupplierByProductId(InventoryVO inventoryVO);
 }

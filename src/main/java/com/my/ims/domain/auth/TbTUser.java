@@ -34,7 +34,7 @@ public class TbTUser extends BaseDomain {
             joinColumns = @JoinColumn(name = "user_id"),  // Name of the foreign key column for User
             inverseJoinColumns = @JoinColumn(name = "role_id")  // Name of the foreign key column for Role
     )
-    private Set<TbTRole> tbTRole = new HashSet<>();
+    private Set<TbTRole> tbTRoleList = new HashSet<>();
 
     public Long getPkUserId() {
         return pkUserId;
@@ -60,12 +60,12 @@ public class TbTUser extends BaseDomain {
         this.password = password;
     }
 
-    public Set<TbTRole> getTbTRole() {
-        return tbTRole;
+    public Set<TbTRole> getTbTRoleList() {
+        return tbTRoleList;
     }
 
-    public void setTbTRole(Set<TbTRole> tbTRole) {
-        this.tbTRole = tbTRole;
+    public void setTbTRoleList(Set<TbTRole> tbTRoleList) {
+        this.tbTRoleList = tbTRoleList;
     }
 
     public String getEmail() {
@@ -86,12 +86,12 @@ public class TbTUser extends BaseDomain {
                 && Objects.equals(username, tbTUser.username)
                 && Objects.equals(email, tbTUser.email)
                 && Objects.equals(password, tbTUser.password)
-                && Objects.equals(tbTRole, tbTUser.tbTRole);
+                && Objects.equals(tbTRoleList, tbTUser.tbTRoleList);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), pkUserId, username, email, password, tbTRole);
+        return Objects.hash(super.hashCode(), pkUserId, username, email, password, tbTRoleList);
     }
 
     @Override
@@ -101,7 +101,7 @@ public class TbTUser extends BaseDomain {
         builder.append(", username='").append(username).append('\'');
         builder.append(", email='").append(email).append('\'');
         builder.append(", password='").append(password).append('\'');
-        builder.append(", tbTRole=").append(tbTRole);
+        builder.append(", tbTRoleList=").append(tbTRoleList);
         builder.append('}');
         return builder.toString();
     }

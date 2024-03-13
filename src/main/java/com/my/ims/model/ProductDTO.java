@@ -3,6 +3,7 @@ package com.my.ims.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 
 public class ProductDTO implements Serializable {
@@ -10,12 +11,12 @@ public class ProductDTO implements Serializable {
     private static final long serialVersionUID = -2397678789843128779L;
 
     private String pkProductId;
-    private String name;
+    private String productName;
     private String description;
     private Long quantity;
     private BigDecimal price;
     private String category;
-    private SupplierDTO supplierDTO;
+    private List<SupplierDTO> supplierListDTO;
 
     public String getPkProductId() {
         return pkProductId;
@@ -25,12 +26,12 @@ public class ProductDTO implements Serializable {
         this.pkProductId = pkProductId;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getDescription() {
@@ -65,12 +66,12 @@ public class ProductDTO implements Serializable {
         this.category = category;
     }
 
-    public SupplierDTO getSupplierDTO() {
-        return supplierDTO;
+    public List<SupplierDTO> getSupplierListDTO() {
+        return supplierListDTO;
     }
 
-    public void setSupplierDTO(SupplierDTO supplierDTO) {
-        this.supplierDTO = supplierDTO;
+    public void setSupplierListDTO(List<SupplierDTO> supplierListDTO) {
+        this.supplierListDTO = supplierListDTO;
     }
 
     @Override
@@ -79,30 +80,30 @@ public class ProductDTO implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         ProductDTO that = (ProductDTO) o;
         return Objects.equals(pkProductId, that.pkProductId)
-                && Objects.equals(name, that.name)
+                && Objects.equals(productName, that.productName)
                 && Objects.equals(description, that.description)
                 && Objects.equals(quantity, that.quantity)
                 && Objects.equals(price, that.price)
                 && Objects.equals(category, that.category)
-                && Objects.equals(supplierDTO, that.supplierDTO);
+                && Objects.equals(supplierListDTO, that.supplierListDTO);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(pkProductId, name, description, quantity, price, category, supplierDTO);
+        return Objects.hash(pkProductId, productName, description, quantity, price, category, supplierListDTO);
     }
 
     @Override
     public String toString() {
-        final StringBuilder builder = new StringBuilder("ProductDTO{");
-        builder.append("pkProductId='").append(pkProductId).append('\'');
-        builder.append(", name='").append(name).append('\'');
-        builder.append(", description='").append(description).append('\'');
-        builder.append(", quantity=").append(quantity);
-        builder.append(", price=").append(price);
-        builder.append(", category='").append(category).append('\'');
-        builder.append(", supplierDTO=").append(supplierDTO);
-        builder.append('}');
-        return builder.toString();
+        final StringBuilder sb = new StringBuilder("ProductDTO{");
+        sb.append("pkProductId='").append(pkProductId).append('\'');
+        sb.append(", productName='").append(productName).append('\'');
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", quantity=").append(quantity);
+        sb.append(", price=").append(price);
+        sb.append(", category='").append(category).append('\'');
+        sb.append(", supplierListDTO=").append(supplierListDTO);
+        sb.append('}');
+        return sb.toString();
     }
 }
