@@ -1,6 +1,6 @@
 package com.my.ims.service.impl;
 
-import com.my.ims.model.InventoryVO;
+import com.my.ims.model.inventory.InventoryVO;
 import com.my.ims.repository.SupplierRepository;
 import com.my.ims.service.SupplierService;
 import org.springframework.beans.factory.annotation.Autowired;

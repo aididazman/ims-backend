@@ -1,6 +1,6 @@
 package com.my.ims.service;
 
-import com.my.ims.model.InventoryVO;
+import com.my.ims.model.inventory.InventoryVO;
 
 public interface SupplierService {
     InventoryVO createOrUpdateSupplier(InventoryVO inventoryVO);

@@ -1,8 +1,8 @@
 package com.my.ims.service.impl;
 
-import com.my.ims.model.AuthVO;
-import com.my.ims.model.JwtResponseDTO;
-import com.my.ims.model.LoginDTO;
+import com.my.ims.model.auth.AuthVO;
+import com.my.ims.model.auth.JwtResponseDTO;
+import com.my.ims.model.auth.LoginDTO;
 import com.my.ims.service.AuthService;
 import com.my.ims.util.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;

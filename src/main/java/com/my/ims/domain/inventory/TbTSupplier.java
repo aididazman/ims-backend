@@ -29,7 +29,7 @@ public class TbTSupplier extends BaseDomain {
     private String contactInfo;
 
     @Column(name = "status")
-    private Boolean status;
+    private Integer status;
 
     public String getPkSupplierId() {
         return pkSupplierId;
@@ -55,11 +55,11 @@ public class TbTSupplier extends BaseDomain {
         this.contactInfo = contactInfo;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

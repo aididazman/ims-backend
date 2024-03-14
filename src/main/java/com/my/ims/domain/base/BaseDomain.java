@@ -1,14 +1,14 @@
 package com.my.ims.domain.base;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
-import java.time.Instant;
+import com.my.ims.util.CommonUtil;
+import jakarta.persistence.*;
+
 import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Objects;
 
 @MappedSuperclass
@@ -16,51 +16,51 @@ public abstract class BaseDomain implements Serializable {
 
     private static final long serialVersionUID = 5411963629582360949L;
 
-    @CreatedDate
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", updatable = false)
-    private Instant createdDate;
+    private LocalDateTime createdDate;
 
     @CreatedBy
     @Column(name = "created_by", updatable = false)
-    private Long createdBy;
+    private String createdBy;
 
-    @LastModifiedDate
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modified_date")
-    private Instant modifiedDate;
+    private LocalDateTime modifiedDate;
 
     @LastModifiedBy
     @Column(name = "modified_by", length = 50)
-    private Long modifiedBy;
+    private String modifiedBy;
 
-    public Instant getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(Instant createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
-    public Long getCreatedBy() {
+    public String getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Long createdBy) {
+    public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
 
-    public Instant getModifiedDate() {
+    public LocalDateTime getModifiedDate() {
         return modifiedDate;
     }
 
-    public void setModifiedDate(Instant modifiedDate) {
+    public void setModifiedDate(LocalDateTime modifiedDate) {
         this.modifiedDate = modifiedDate;
     }
 
-    public Long getModifiedBy() {
+    public String getModifiedBy() {
         return modifiedBy;
     }
 
-    public void setModifiedBy(Long modifiedBy) {
+    public void setModifiedBy(String modifiedBy) {
         this.modifiedBy = modifiedBy;
     }
 
@@ -90,4 +90,19 @@ public abstract class BaseDomain implements Serializable {
         sb.append('}');
         return sb.toString();
     }
+
+    @PrePersist
+    private void onSave() {
+        this.createdDate = LocalDateTime.now(ZoneId.systemDefault());
+        this.createdBy = CommonUtil.getCurrentUser();
+        this.modifiedDate = LocalDateTime.now(ZoneId.systemDefault());
+        this.modifiedBy = CommonUtil.getCurrentUser();
+    }
+
+    @PreUpdate
+    private void onUpdate() {
+        this.modifiedDate = LocalDateTime.now(ZoneId.systemDefault());
+        this.modifiedBy = CommonUtil.getCurrentUser();
+    }
+
 }

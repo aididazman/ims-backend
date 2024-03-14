@@ -38,7 +38,7 @@ public class TbTProduct extends BaseDomain {
     private String category;
 
     @Column(name = "status")
-    private Boolean status;
+    private Integer status;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -96,11 +96,11 @@ public class TbTProduct extends BaseDomain {
         this.category = category;
     }
 
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
