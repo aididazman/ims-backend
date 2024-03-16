@@ -1,5 +1,6 @@
 package com.my.ims.controller.inventory;
 
+import com.my.ims.domain.inventory.TbTProduct;
 import com.my.ims.model.inventory.InventoryVO;
 import com.my.ims.model.inventory.ProductDTO;
 import com.my.ims.model.form.CommonCompositeDeleteDO;
@@ -9,6 +10,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,15 +53,16 @@ public class InventoryController {
         return new ResponseEntity<>(inventoryVO.getProductDTO(), HttpStatus.OK);
     }
 
-    //TODO: do pagination
-    @Operation( summary = "get all inventory", tags = { "inventory-management" })
+    @Operation( summary = "get all inventory paginated", tags = { "inventory-management" })
     @GetMapping("/inventory")
-    public ResponseEntity<List<ProductDTO>> getAllInventory() {
+    public ResponseEntity<List<ProductDTO>> getAllInventoryPaginated(Pageable productPaginated) {
 
         log.info("REST request to get all inventory");
 
         InventoryVO inventoryVO = new InventoryVO();
-        inventoryVO = productService.getAllProduct(inventoryVO);
+        inventoryVO.setProductPageable(productPaginated);
+
+        inventoryVO = productService.getAllProductPaginated(inventoryVO);
 
         return new ResponseEntity<>(inventoryVO.getProductListDTO(), HttpStatus.OK);
     }
@@ -72,6 +76,7 @@ public class InventoryController {
         InventoryVO inventoryVO = new InventoryVO();
         inventoryVO.setPkProductId(pkProductId);
         inventoryVO = productService.getProductById(inventoryVO);
+
 
         return new ResponseEntity<>(inventoryVO.getProductDTO(), HttpStatus.OK);
     }

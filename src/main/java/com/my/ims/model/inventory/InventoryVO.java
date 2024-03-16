@@ -1,5 +1,9 @@
 package com.my.ims.model.inventory;
 
+import com.my.ims.domain.inventory.TbTProduct;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
@@ -12,11 +16,15 @@ public class InventoryVO implements Serializable {
     private List<String> pkProductList;
     private ProductDTO productDTO;
     private List<ProductDTO> productListDTO;
+    private Page<TbTProduct> productPaginated;
+    private Pageable productPageable;
 
     private String pkSupplierId;
     private List<String> pkSupplierList;
     private SupplierDTO supplierDTO;
     private List<SupplierDTO> supplierListDTO;
+
+    private Boolean status;
 
     public ProductDTO getProductDTO() {
         return productDTO;
@@ -82,6 +90,30 @@ public class InventoryVO implements Serializable {
         this.supplierListDTO = supplierListDTO;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
+
+    public Page<TbTProduct> getProductPaginated() {
+        return productPaginated;
+    }
+
+    public void setProductPaginated(Page<TbTProduct> productPaginated) {
+        this.productPaginated = productPaginated;
+    }
+
+    public Pageable getProductPageable() {
+        return productPageable;
+    }
+
+    public void setProductPageable(Pageable productPageable) {
+        this.productPageable = productPageable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -94,13 +126,16 @@ public class InventoryVO implements Serializable {
                 && Objects.equals(pkSupplierId, that.pkSupplierId)
                 && Objects.equals(pkSupplierList, that.pkSupplierList)
                 && Objects.equals(supplierDTO, that.supplierDTO)
-                && Objects.equals(supplierListDTO, that.supplierListDTO);
+                && Objects.equals(supplierListDTO, that.supplierListDTO)
+                && Objects.equals(status, that.status)
+                && Objects.equals(productPaginated, that.productPaginated)
+                && Objects.equals(productPageable, that.productPageable);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(pkProductId, pkProductList, productDTO, productListDTO, pkSupplierId,
-                pkSupplierList, supplierDTO, supplierListDTO);
+                pkSupplierList, supplierDTO, supplierListDTO, status, productPaginated, productPageable);
     }
 
     @Override
@@ -114,6 +149,9 @@ public class InventoryVO implements Serializable {
         sb.append(", pkSupplierList=").append(pkSupplierList);
         sb.append(", supplierDTO=").append(supplierDTO);
         sb.append(", supplierListDTO=").append(supplierListDTO);
+        sb.append(", status=").append(status);
+        sb.append(", productPaginated=").append(productPaginated);
+        sb.append(", productPageable=").append(productPageable);
         sb.append('}');
         return sb.toString();
     }
