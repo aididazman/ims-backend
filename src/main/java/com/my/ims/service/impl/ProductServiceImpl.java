@@ -38,7 +38,6 @@ public class ProductServiceImpl implements ProductService {
             ProductDTO productDTO = inventoryVO.getProductDTO();
             boolean isUpdate = productDTO.getPkProductId() != null;
 
-
             if (isUpdate) {
 
                 TbTProduct tbTProduct = productRepository.findOneByPkProductIdAndStatus(productDTO.getPkProductId(), DbStatusEnum.ACTIVE.getValue());
@@ -127,29 +126,30 @@ public class ProductServiceImpl implements ProductService {
             inventoryVO.setStatus(false);
         }
 
-        inventoryVO.setStatus(true);
         return inventoryVO;
     }
 
     @Override
     public InventoryVO getAllProduct(InventoryVO inventoryVO) {
+
         List<TbTProduct> tbTProductList = productRepository.findAllByStatus(DbStatusEnum.ACTIVE.getValue());
         List<ProductDTO> productListDTO = new ArrayList<>();
 
-        for (TbTProduct tbTProduct : tbTProductList) {
+        tbTProductList.forEach(tbTProduct -> {
+
             ProductDTO productDTO = new ProductDTO();
             BeanUtils.copyProperties(tbTProduct, productDTO);
             List<SupplierDTO> supplierListDTO = new ArrayList<>();
 
-            for (TbTSupplier tbTSupplier: tbTProduct.getTbTSupplierList()) {
+            tbTProduct.getTbTSupplierList().forEach(tbTSupplier -> {
                 SupplierDTO supplierDTO = new SupplierDTO();
                 BeanUtils.copyProperties(tbTSupplier, supplierDTO);
                 supplierListDTO.add(supplierDTO);
-            }
+            });
 
             productDTO.setSupplierListDTO(supplierListDTO);
             productListDTO.add(productDTO);
-        }
+        });
 
         inventoryVO.setProductListDTO(productListDTO);
         return inventoryVO;
@@ -163,23 +163,23 @@ public class ProductServiceImpl implements ProductService {
         List<TbTProduct> tbTProductList = tbTProductPage.getContent();
         List<ProductDTO> productListDTO = new ArrayList<>();
 
-        for (TbTProduct tbTProduct : tbTProductList) {
+
+        tbTProductList.forEach(tbTProduct -> {
 
             ProductDTO productDTO = new ProductDTO();
             List<SupplierDTO> supplierListDTO = new ArrayList<>();
 
-            for (TbTSupplier tbTSupplier: tbTProduct.getTbTSupplierList()) {
-
+            tbTProduct.getTbTSupplierList().forEach(tbTSupplier -> {
                 SupplierDTO supplierDTO = new SupplierDTO();
                 BeanUtils.copyProperties(tbTSupplier, supplierDTO);
                 supplierListDTO.add(supplierDTO);
-            }
+            });
 
             productDTO.setSupplierListDTO(supplierListDTO);
             BeanUtils.copyProperties(tbTProduct, productDTO);
 
             productListDTO.add(productDTO);
-        }
+        });
 
         inventoryVO.setProductListDTO(productListDTO);
 
@@ -198,16 +198,15 @@ public class ProductServiceImpl implements ProductService {
 
             List<SupplierDTO> supplierListDTO = new ArrayList<>();
 
-            for (TbTSupplier tbTSupplier : tbTProduct.getTbTSupplierList()) {
+            tbTProduct.getTbTSupplierList().forEach(tbTSupplier -> {
                 SupplierDTO supplierDTO = new SupplierDTO();
                 BeanUtils.copyProperties(tbTSupplier, supplierDTO);
                 supplierDTO.setName(tbTSupplier.getName());
                 supplierListDTO.add(supplierDTO);
-            }
+            });
 
             productDTO.setSupplierListDTO(supplierListDTO);
             inventoryVO.setProductDTO(productDTO);
-
         }
 
         return inventoryVO;

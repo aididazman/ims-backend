@@ -24,7 +24,7 @@ public class InventoryVO implements Serializable {
     private SupplierDTO supplierDTO;
     private List<SupplierDTO> supplierListDTO;
 
-    private Boolean status;
+    private Boolean status = true;
 
     public ProductDTO getProductDTO() {
         return productDTO;

@@ -69,7 +69,7 @@ public class InventoryController {
 
     @Operation( summary = "get inventory by product id", tags = { "inventory-management" })
     @GetMapping("/inventory/{pkProductId}")
-    public ResponseEntity<ProductDTO> getInventoryByProductId(@PathVariable @NotNull String pkProductId) {
+    public ResponseEntity<ProductDTO> getInventoryByProductId(@PathVariable String pkProductId) {
 
         log.info("REST request to get inventory by product id: {}", pkProductId);
 
@@ -77,13 +77,12 @@ public class InventoryController {
         inventoryVO.setPkProductId(pkProductId);
         inventoryVO = productService.getProductById(inventoryVO);
 
-
         return new ResponseEntity<>(inventoryVO.getProductDTO(), HttpStatus.OK);
     }
 
     @Operation( summary = "delete inventory by product", tags = { "inventory-management" })
     @PostMapping("/delete-inventory")
-    public ResponseEntity<String> deleteByProductIds(@RequestBody @NotNull CommonCompositeDeleteDO commonCompositeDeleteDO) {
+    public ResponseEntity<String> deleteByProductIds(@RequestBody CommonCompositeDeleteDO commonCompositeDeleteDO) {
 
         InventoryVO inventoryVO = new InventoryVO();
         inventoryVO.setPkProductList(Arrays.asList(commonCompositeDeleteDO.getIds()));
