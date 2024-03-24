@@ -54,7 +54,8 @@ public class ProductServiceImpl implements ProductService {
                     if (productDTO.getSupplierListDTO() != null) {
 
                         productDTO.getSupplierListDTO().forEach(supplierDTO -> {
-                            TbTSupplier tbTSupplier = supplierRepository.findByPkSupplierId(supplierDTO.getPkSupplierId());
+                            TbTSupplier tbTSupplier = supplierRepository.findByPkSupplierIdAndStatus(supplierDTO.getPkSupplierId(),
+                                    DbStatusEnum.ACTIVE.getValue());
 
                             if (supplierDTO.getName() != null)
                                 tbTSupplier.setName(supplierDTO.getName());
@@ -93,7 +94,8 @@ public class ProductServiceImpl implements ProductService {
                         TbTSupplier tbTSupplier = null;
                         //check for existing id
                         if (supplierDTO.getPkSupplierId() != null) {
-                            tbTSupplier = supplierRepository.findByPkSupplierId(supplierDTO.getPkSupplierId());
+                            tbTSupplier = supplierRepository.findByPkSupplierIdAndStatus(supplierDTO.getPkSupplierId(),
+                                    DbStatusEnum.ACTIVE.getValue());
                             BeanUtils.copyProperties(tbTSupplier, supplierDTO);
                         } else {
                             tbTSupplier = new TbTSupplier();
@@ -196,7 +198,6 @@ public class ProductServiceImpl implements ProductService {
             tbTProduct.getTbTSupplierList().forEach(tbTSupplier -> {
                 SupplierDTO supplierDTO = new SupplierDTO();
                 BeanUtils.copyProperties(tbTSupplier, supplierDTO);
-                supplierDTO.setName(tbTSupplier.getName());
                 supplierListDTO.add(supplierDTO);
             });
 
@@ -210,12 +211,31 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public InventoryVO deleteProductByIds(InventoryVO inventoryVO) {
 
-        List<String> tbTProductIds = inventoryVO.getPkProductList();
+        List<String> tbTProductIds = inventoryVO.getPkProductIds();
 
         if (!tbTProductIds.isEmpty()) {
             productRepository.deleteByPkProductIds(DbStatusEnum.DELETED.getValue(), tbTProductIds);
         }
 
+        return inventoryVO;
+    }
+
+    @Override
+    public InventoryVO getAllProductBySupplierIds(InventoryVO inventoryVO) {
+
+        List<TbTProduct> tbTProductList = productRepository.findByTbTSupplierListPkSupplierIdInAndStatus(inventoryVO.getPkSupplierIds(),
+                DbStatusEnum.ACTIVE.getValue());
+
+        List<ProductDTO> productListDTO = new ArrayList<>();
+
+        tbTProductList.forEach(tbTProduct -> {
+
+            ProductDTO productDTO = new ProductDTO();
+            BeanUtils.copyProperties(tbTProduct, productDTO);
+            productListDTO.add(productDTO);
+        });
+
+        inventoryVO.setProductListDTO(productListDTO);
         return inventoryVO;
     }
 }

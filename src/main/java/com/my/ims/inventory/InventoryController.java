@@ -3,6 +3,8 @@ package com.my.ims.inventory;
 import com.my.ims.inventory.product.ProductDTO;
 import com.my.ims.form.CommonCompositeDeleteCommand;
 import com.my.ims.inventory.product.ProductService;
+import com.my.ims.inventory.supplier.SupplierDTO;
+import com.my.ims.inventory.supplier.SupplierService;
 import com.my.ims.util.constants.MessageConstants;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,9 @@ public class InventoryController {
 
     @Autowired
     ProductService productService;
+
+    @Autowired
+    SupplierService supplierService;
 
     @Operation( summary = "add inventory", tags = { "inventory-management" })
     @PostMapping("/add-inventory")
@@ -64,7 +69,7 @@ public class InventoryController {
     }
 
     @Operation( summary = "get inventory by product id", tags = { "inventory-management" })
-    @GetMapping("/inventory/{pkProductId}")
+    @GetMapping("/inventory/product/{pkProductId}")
     public ResponseEntity<ProductDTO> getInventoryByProductId(@PathVariable String pkProductId) {
 
         log.info("REST request to get inventory by product id: {}", pkProductId);
@@ -76,14 +81,27 @@ public class InventoryController {
         return new ResponseEntity<>(inventoryVO.getProductDTO(), HttpStatus.OK);
     }
 
+    @Operation( summary = "get inventory by supplier id", tags = { "inventory-management" })
+    @GetMapping("/inventory/supplier/{pkSupplierId}")
+    public ResponseEntity<SupplierDTO> getInventoryBySupplierId(@PathVariable String pkSupplierId) {
+
+        log.info("REST request to get inventory by supplier id: {}", pkSupplierId);
+
+        InventoryVO inventoryVO = new InventoryVO();
+        inventoryVO.setPkSupplierId(pkSupplierId);
+        inventoryVO = supplierService.getSupplierById(inventoryVO);
+
+        return new ResponseEntity<>(inventoryVO.getSupplierDTO(), HttpStatus.OK);
+    }
+
     @Operation( summary = "delete inventory by product", tags = { "inventory-management" })
     @PostMapping("/delete-inventory")
     public ResponseEntity<String> deleteByProductIds(@RequestBody CommonCompositeDeleteCommand commonCompositeDeleteCommand) {
 
         InventoryVO inventoryVO = new InventoryVO();
-        inventoryVO.setPkProductList(Arrays.asList(commonCompositeDeleteCommand.getIds()));
+        inventoryVO.setPkProductIds(Arrays.asList(commonCompositeDeleteCommand.getIds()));
 
-        log.info("REST request to delete product by ids: {}", inventoryVO.getPkProductList());
+        log.info("REST request to delete product by ids: {}", inventoryVO.getPkProductIds());
 
         inventoryVO = productService.deleteProductByIds(inventoryVO);
 

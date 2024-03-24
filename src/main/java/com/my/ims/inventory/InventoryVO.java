@@ -15,14 +15,14 @@ public class InventoryVO implements Serializable {
     private static final long serialVersionUID = 4744240818056752948L;
 
     private String pkProductId;
-    private List<String> pkProductList;
+    private List<String> pkProductIds;
     private ProductDTO productDTO;
     private List<ProductDTO> productListDTO;
     private Page<TbTProduct> productPaginated;
     private Pageable productPageable;
 
     private String pkSupplierId;
-    private List<String> pkSupplierList;
+    private List<String> pkSupplierIds;
     private SupplierDTO supplierDTO;
     private List<SupplierDTO> supplierListDTO;
 
@@ -60,20 +60,20 @@ public class InventoryVO implements Serializable {
         this.pkSupplierId = pkSupplierId;
     }
 
-    public List<String> getPkProductList() {
-        return pkProductList;
+    public List<String> getPkProductIds() {
+        return pkProductIds;
     }
 
-    public void setPkProductList(List<String> pkProductList) {
-        this.pkProductList = pkProductList;
+    public void setPkProductIds(List<String> pkProductIds) {
+        this.pkProductIds = pkProductIds;
     }
 
-    public List<String> getPkSupplierList() {
-        return pkSupplierList;
+    public List<String> getPkSupplierIds() {
+        return pkSupplierIds;
     }
 
-    public void setPkSupplierList(List<String> pkSupplierList) {
-        this.pkSupplierList = pkSupplierList;
+    public void setPkSupplierIds(List<String> pkSupplierIds) {
+        this.pkSupplierIds = pkSupplierIds;
     }
 
     public List<ProductDTO> getProductListDTO() {
@@ -122,11 +122,11 @@ public class InventoryVO implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         InventoryVO that = (InventoryVO) o;
         return Objects.equals(pkProductId, that.pkProductId)
-                && Objects.equals(pkProductList, that.pkProductList)
+                && Objects.equals(pkProductIds, that.pkProductIds)
                 && Objects.equals(productDTO, that.productDTO)
                 && Objects.equals(productListDTO, that.productListDTO)
                 && Objects.equals(pkSupplierId, that.pkSupplierId)
-                && Objects.equals(pkSupplierList, that.pkSupplierList)
+                && Objects.equals(pkSupplierIds, that.pkSupplierIds)
                 && Objects.equals(supplierDTO, that.supplierDTO)
                 && Objects.equals(supplierListDTO, that.supplierListDTO)
                 && Objects.equals(status, that.status)
@@ -136,19 +136,19 @@ public class InventoryVO implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(pkProductId, pkProductList, productDTO, productListDTO, pkSupplierId,
-                pkSupplierList, supplierDTO, supplierListDTO, status, productPaginated, productPageable);
+        return Objects.hash(pkProductId, pkProductIds, productDTO, productListDTO, pkSupplierId,
+                pkSupplierIds, supplierDTO, supplierListDTO, status, productPaginated, productPageable);
     }
 
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("InventoryVO{");
         sb.append("pkProductId='").append(pkProductId).append('\'');
-        sb.append(", pkProductList=").append(pkProductList);
+        sb.append(", pkProductList=").append(pkProductIds);
         sb.append(", productDTO=").append(productDTO);
         sb.append(", productListDTO=").append(productListDTO);
         sb.append(", pkSupplierId='").append(pkSupplierId).append('\'');
-        sb.append(", pkSupplierList=").append(pkSupplierList);
+        sb.append(", pkSupplierList=").append(pkSupplierIds);
         sb.append(", supplierDTO=").append(supplierDTO);
         sb.append(", supplierListDTO=").append(supplierListDTO);
         sb.append(", status=").append(status);

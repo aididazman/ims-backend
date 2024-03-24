@@ -2,8 +2,6 @@ package com.my.ims.inventory.product;
 
 import com.my.ims.form.CommonCompositeDeleteCommand;
 import com.my.ims.inventory.InventoryVO;
-import com.my.ims.inventory.product.ProductDTO;
-import com.my.ims.inventory.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,9 +50,9 @@ public class ProductController {
     public ResponseEntity<ProductDTO> deleteProductById(@RequestBody CommonCompositeDeleteCommand commonCompositeDeleteCommand) {
 
         InventoryVO inventoryVO = new InventoryVO();
-        inventoryVO.setPkProductList(Arrays.asList(commonCompositeDeleteCommand.getIds()));
+        inventoryVO.setPkProductIds(Arrays.asList(commonCompositeDeleteCommand.getIds()));
 
-        log.info("REST request to delete product by ids: {}", inventoryVO.getPkProductList());
+        log.info("REST request to delete product by ids: {}", inventoryVO.getPkProductIds());
 
         inventoryVO = productService.deleteProductByIds(inventoryVO);
 

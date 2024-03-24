@@ -1,5 +1,6 @@
 package com.my.ims.inventory.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.my.ims.base.domain.BaseDomain;
 import com.my.ims.inventory.supplier.TbTSupplier;
 import com.my.ims.util.constants.TableConstants;
@@ -43,9 +44,9 @@ public class TbTProduct extends BaseDomain {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = TableConstants.TB_M_PRODUCTSUPPLY,  // Name of the join table
-            joinColumns = @JoinColumn(name = "product_id"),  // Name of the foreign key column for User
-            inverseJoinColumns = @JoinColumn(name = "supply_id")  // Name of the foreign key column for Role
+            name = TableConstants.TB_M_PRODUCTSUPPLY,
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "supply_id")
     )
     private Set<TbTSupplier> tbTSupplierList = new HashSet<>();
 

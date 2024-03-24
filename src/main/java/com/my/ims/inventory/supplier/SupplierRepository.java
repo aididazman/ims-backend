@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface SupplierRepository extends JpaRepository<TbTSupplier, String> {
 
-    TbTSupplier findByPkSupplierId(String pkSupplierId);
+    TbTSupplier findByPkSupplierIdAndStatus(String pkSupplierId, Integer status);
 
     @Query(value = "select s.* " +
             "from tb_t_supplier s " +

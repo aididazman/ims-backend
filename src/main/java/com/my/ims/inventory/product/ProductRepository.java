@@ -19,11 +19,24 @@ public interface ProductRepository extends JpaRepository<TbTProduct, String> {
 
     List<TbTProduct> findAllByStatus(Integer status);
 
-    @Query("SELECT p FROM TbTProduct p WHERE p.status = :status")
+    @Query("SELECT p " +
+            "FROM TbTProduct p " +
+            "WHERE p.status = :status")
     Page<TbTProduct> findAllByStatus(@Param("status") Integer status, Pageable productPageable);
 
     @Modifying
-    @Query("UPDATE TbTProduct p SET p.status = :status WHERE p.pkProductId IN (:pkProductIds)")
+    @Query("UPDATE TbTProduct p " +
+            "SET p.status = :status " +
+            "WHERE p.pkProductId IN (:pkProductIds)")
     void deleteByPkProductIds(@Param("status") Integer status, @Param("pkProductIds") List<String> pkProductIds);
+
+    @Query("SELECT p FROM TbTProduct p " +
+            "LEFT JOIN p.tbTSupplierList s " +
+            "WHERE p.status = :status " +
+            "AND s.pkSupplierId IN (:pkSupplierIds)")
+    List<TbTProduct> findAllBySupplierIdsAndStatus(@Param("status") Integer status,
+                                                   @Param("pkSupplierIds") List<String> pkSupplierIds);
+
+    List<TbTProduct> findByTbTSupplierListPkSupplierIdInAndStatus(List<String> pkSupplierIds, Integer status);
 
 }
