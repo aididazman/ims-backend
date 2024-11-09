@@ -1,8 +1,9 @@
 package com.my.ims.inventory;
 
 import com.my.ims.inventory.product.ProductDTO;
-import com.my.ims.form.CommonCompositeDeleteCommand;
+import com.my.ims.form.CommonDeleteCommand;
 import com.my.ims.inventory.product.ProductService;
+import com.my.ims.inventory.product.ProductWithSupplierDTO;
 import com.my.ims.inventory.supplier.SupplierDTO;
 import com.my.ims.inventory.supplier.SupplierService;
 import com.my.ims.util.constants.MessageConstants;
@@ -29,43 +30,36 @@ public class InventoryController {
     SupplierService supplierService;
 
     @Operation( summary = "add inventory", tags = { "inventory-management" })
-    @PostMapping("/add-inventory")
-    public ResponseEntity<ProductDTO> createInventory(@RequestBody ProductDTO productDTO) {
+    @PostMapping("/inventory")
+    public ResponseEntity<List<ProductWithSupplierDTO>> createInventory(@RequestBody List<ProductWithSupplierDTO>
+                                                                                    productWithSupplierListDTO) {
 
-        log.info("REST request to create inventory: {}", productDTO);
-
-        InventoryVO inventoryVO = new InventoryVO();
-        inventoryVO.setProductDTO(productDTO);
-        inventoryVO = productService.createOrUpdateProduct(inventoryVO);
-
-        return new ResponseEntity<>(inventoryVO.getProductDTO(), HttpStatus.OK);
+        log.info("REST request to create inventory: {}", productWithSupplierListDTO);
+        productWithSupplierListDTO = productService.create(productWithSupplierListDTO);
+        return new ResponseEntity<>(productWithSupplierListDTO, HttpStatus.OK);
     }
 
     @Operation( summary = "update inventory", tags = { "inventory-management" })
-    @PostMapping("/update-inventory")
-    public ResponseEntity<ProductDTO> updateInventory(@RequestBody ProductDTO productDTO) {
+    @PutMapping("/inventory")
+    public ResponseEntity<List<ProductWithSupplierDTO>> updateInventory(@RequestBody List<ProductWithSupplierDTO>
+                                                                                    productWithSupplierListDTO) {
 
-        log.info("REST request to update inventory: {}", productDTO);
-
-        InventoryVO inventoryVO = new InventoryVO();
-        inventoryVO.setProductDTO(productDTO);
-        inventoryVO = productService.createOrUpdateProduct(inventoryVO);
-
-        return new ResponseEntity<>(inventoryVO.getProductDTO(), HttpStatus.OK);
+        log.info("REST request to update inventory: {}", productWithSupplierListDTO);
+        productWithSupplierListDTO = productService.update(productWithSupplierListDTO);
+        return new ResponseEntity<>(productWithSupplierListDTO, HttpStatus.OK);
     }
 
     @Operation( summary = "get all inventory paginated", tags = { "inventory-management" })
     @GetMapping("/inventory")
-    public ResponseEntity<List<ProductDTO>> getAllInventoryPaginated(Pageable productPaginated) {
+    public ResponseEntity<List<ProductWithSupplierDTO>> getAllInventoryPaginated(Pageable productPaginated) {
 
         log.info("REST request to get all inventory");
 
         InventoryVO inventoryVO = new InventoryVO();
         inventoryVO.setProductPageable(productPaginated);
-
         inventoryVO = productService.getAllProductPaginated(inventoryVO);
 
-        return new ResponseEntity<>(inventoryVO.getProductListDTO(), HttpStatus.OK);
+        return new ResponseEntity<>(inventoryVO.getProductWithSupplierListDTO(), HttpStatus.OK);
     }
 
     @Operation( summary = "get inventory by product id", tags = { "inventory-management" })
@@ -96,7 +90,7 @@ public class InventoryController {
 
     @Operation( summary = "delete inventory by product", tags = { "inventory-management" })
     @PostMapping("/delete-inventory")
-    public ResponseEntity<String> deleteByProductIds(@RequestBody CommonCompositeDeleteCommand commonCompositeDeleteCommand) {
+    public ResponseEntity<String> deleteByProductIds(@RequestBody CommonDeleteCommand commonCompositeDeleteCommand) {
 
         InventoryVO inventoryVO = new InventoryVO();
         inventoryVO.setPkProductIds(Arrays.asList(commonCompositeDeleteCommand.getIds()));

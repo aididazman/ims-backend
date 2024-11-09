@@ -5,6 +5,7 @@ import com.my.ims.inventory.InventoryVO;
 import com.my.ims.inventory.supplier.SupplierDTO;
 import com.my.ims.inventory.supplier.SupplierRepository;
 import com.my.ims.util.constants.DbStatusEnum;
+import com.my.ims.util.exceptions.domain.ResourceNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Transactional
@@ -27,129 +27,99 @@ public class ProductServiceImpl implements ProductService {
     SupplierRepository supplierRepository;
 
     @Override
-    public InventoryVO createOrUpdateProduct(InventoryVO inventoryVO) {
+    public <T extends ProductDTO> List<T> create(List<T> productList) {
 
-        try {
+        for (T product : productList) {
 
-            ProductDTO productDTO = inventoryVO.getProductDTO();
-            boolean isUpdate = productDTO.getPkProductId() != null;
+            TbTProduct tbTProduct = new TbTProduct();
 
-            if (isUpdate) {
-
-                TbTProduct tbTProduct = productRepository.findOneByPkProductIdAndStatus(productDTO.getPkProductId(), DbStatusEnum.ACTIVE.getValue());
-                if (tbTProduct != null) {
-
-                    if (productDTO.getProductName() != null)
-                        tbTProduct.setProductName(productDTO.getProductName());
-                    if (productDTO.getCategory() != null)
-                        tbTProduct.setCategory(productDTO.getCategory());
-                    if (productDTO.getDescription() != null)
-                        tbTProduct.setDescription(productDTO.getDescription());
-                    if (productDTO.getQuantity() != null)
-                        tbTProduct.setQuantity(productDTO.getQuantity());
-                    if (productDTO.getPrice() != null)
-                        tbTProduct.setPrice(productDTO.getPrice());
-                    if (productDTO.getCategory() != null)
-                        tbTProduct.setCategory(productDTO.getCategory());
-                    if (productDTO.getSupplierListDTO() != null) {
-
-                        productDTO.getSupplierListDTO().forEach(supplierDTO -> {
-                            TbTSupplier tbTSupplier = supplierRepository.findByPkSupplierIdAndStatus(supplierDTO.getPkSupplierId(),
-                                    DbStatusEnum.ACTIVE.getValue());
-
-                            if (supplierDTO.getName() != null)
-                                tbTSupplier.setName(supplierDTO.getName());
-                            if (supplierDTO.getContactInfo() != null)
-                                tbTSupplier.setContactInfo(supplierDTO.getContactInfo());
-
-                            tbTSupplier = supplierRepository.save(tbTSupplier);
-                            BeanUtils.copyProperties(tbTSupplier, supplierDTO);
-                        });
-                    }
-
-                    productRepository.save(tbTProduct);
-                    BeanUtils.copyProperties(tbTProduct, productDTO);
-                }
-
+            if (product instanceof ProductWithSupplierDTO productWithSupplierDTO) {
+                BeanUtils.copyProperties(productWithSupplierDTO, tbTProduct);
+                addSupplier(tbTProduct, productWithSupplierDTO.getSupplierListDTO());
             } else {
-
-                TbTProduct tbTProduct = new TbTProduct();
-
-                if (productDTO.getProductName() != null)
-                    tbTProduct.setProductName(productDTO.getProductName());
-                if (productDTO.getCategory() != null)
-                    tbTProduct.setCategory(productDTO.getCategory());
-                if (productDTO.getDescription() != null)
-                    tbTProduct.setDescription(productDTO.getDescription());
-                if (productDTO.getQuantity() != null)
-                    tbTProduct.setQuantity(productDTO.getQuantity());
-                if (productDTO.getPrice() != null)
-                    tbTProduct.setPrice(productDTO.getPrice());
-                if (productDTO.getCategory() != null)
-                    tbTProduct.setCategory(productDTO.getCategory());
-                if (productDTO.getSupplierListDTO() != null) {
-
-                    for (SupplierDTO supplierDTO : productDTO.getSupplierListDTO()) {
-
-                        TbTSupplier tbTSupplier = null;
-                        //check for existing id
-                        if (supplierDTO.getPkSupplierId() != null) {
-                            tbTSupplier = supplierRepository.findByPkSupplierIdAndStatus(supplierDTO.getPkSupplierId(),
-                                    DbStatusEnum.ACTIVE.getValue());
-                            BeanUtils.copyProperties(tbTSupplier, supplierDTO);
-                        } else {
-                            tbTSupplier = new TbTSupplier();
-                            if (supplierDTO.getName() != null)
-                                tbTSupplier.setName(supplierDTO.getName());
-                            if (supplierDTO.getContactInfo() != null)
-                                tbTSupplier.setContactInfo(supplierDTO.getContactInfo());
-
-                            tbTSupplier.setStatus(DbStatusEnum.ACTIVE.getValue());
-                            tbTSupplier = supplierRepository.save(tbTSupplier);
-                            supplierDTO.setPkSupplierId(tbTSupplier.getPkSupplierId());
-                        }
-
-                        tbTProduct.addSupplier(tbTSupplier);
-                    }
-                }
-
-                tbTProduct.setStatus(DbStatusEnum.ACTIVE.getValue());
-                tbTProduct = productRepository.save(tbTProduct);
-                productDTO.setPkProductId(tbTProduct.getPkProductId());
+                BeanUtils.copyProperties(product, tbTProduct);
             }
 
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            inventoryVO.setStatus(false);
+            log.info("Saving TbTProduct: {}", tbTProduct);
+            tbTProduct = productRepository.save(tbTProduct);
+            product.setPkProductId(tbTProduct.getPkProductId());
+
         }
 
-        return inventoryVO;
+        return productList;
+    }
+
+    private void addSupplier(TbTProduct tbTProduct, List<SupplierDTO> supplierListDTO) {
+
+        for (SupplierDTO supplierDTO : supplierListDTO) {
+
+            TbTSupplier tbTSupplier = null;
+
+            if (supplierDTO.getPkSupplierId() != null) {
+                log.info("Find TbTSupplier by id: {}", supplierDTO.getPkSupplierId());
+                tbTSupplier = Optional.ofNullable(supplierRepository.findByPkSupplierIdAndStatus(
+                                supplierDTO.getPkSupplierId(), DbStatusEnum.ACTIVE.getValue()))
+                        .orElseThrow(() -> new ResourceNotFoundException(
+                                "Product with supplier not exist with pkSupplierId:" + supplierDTO.getPkSupplierId()));
+                BeanUtils.copyProperties(tbTSupplier, supplierDTO);
+            } else {
+                tbTSupplier = TbTSupplier.builder()
+                        .name(supplierDTO.getName())
+                        .contactInfo(supplierDTO.getContactInfo())
+                        .build();
+
+                tbTSupplier = supplierRepository.save(tbTSupplier);
+                supplierDTO.setPkSupplierId(tbTSupplier.getPkSupplierId());
+            }
+
+            tbTProduct.addSupplier(tbTSupplier);
+        }
     }
 
     @Override
-    public InventoryVO getAllProduct(InventoryVO inventoryVO) {
+    public <T extends ProductDTO> List<T> update(List<T> productList) {
 
-        List<TbTProduct> tbTProductList = productRepository.findAllByStatus(DbStatusEnum.ACTIVE.getValue());
-        List<ProductDTO> productListDTO = new ArrayList<>();
+        for (T product : productList) {
 
-        tbTProductList.forEach(tbTProduct -> {
+            if (product.getPkProductId().isEmpty())
+                throw new IllegalArgumentException("pkProductId is null");
 
-            ProductDTO productDTO = new ProductDTO();
-            BeanUtils.copyProperties(tbTProduct, productDTO);
-            List<SupplierDTO> supplierListDTO = new ArrayList<>();
+            TbTProduct tbTProduct = Optional.ofNullable(productRepository.findOneByPkProductIdAndStatus(
+                    product.getPkProductId(), DbStatusEnum.ACTIVE.getValue()))
+                    .orElseThrow(() -> new ResourceNotFoundException("Product not exist with pkProductId:"
+                            + product.getPkProductId()));
 
-            tbTProduct.getTbTSupplierList().forEach(tbTSupplier -> {
-                SupplierDTO supplierDTO = new SupplierDTO();
-                BeanUtils.copyProperties(tbTSupplier, supplierDTO);
-                supplierListDTO.add(supplierDTO);
-            });
+            if (product instanceof ProductWithSupplierDTO productWithSupplierDTO) {
+                BeanUtils.copyProperties(productWithSupplierDTO, tbTProduct);
+                updateSupplier(productWithSupplierDTO.getSupplierListDTO(), tbTProduct);
+            } else {
+                BeanUtils.copyProperties(product, tbTProduct);
+            }
 
-            productDTO.setSupplierListDTO(supplierListDTO);
-            productListDTO.add(productDTO);
+            log.info("Updating TbTProduct: {}", tbTProduct);
+            productRepository.save(tbTProduct);
+            BeanUtils.copyProperties(tbTProduct, product);
+        }
+
+        return productList;
+    }
+
+    private void updateSupplier(List<SupplierDTO> supplierListDTO, TbTProduct tbTProduct) {
+
+        Set<TbTSupplier> tbTSupplierList = new HashSet<>();
+
+        supplierListDTO.forEach(supplierDTO -> {
+            log.info("Find TbTSupplier by id: {}", supplierDTO.getPkSupplierId());
+            TbTSupplier tbTSupplier = Optional.ofNullable(supplierRepository.findByPkSupplierIdAndStatus(
+                    supplierDTO.getPkSupplierId(), DbStatusEnum.ACTIVE.getValue()))
+                    .orElseThrow(() -> new ResourceNotFoundException(
+                            "Product with supplier not exist with pkSupplierId:" + supplierDTO.getPkSupplierId()));
+
+            tbTSupplierList.add(tbTSupplier);
+            BeanUtils.copyProperties(tbTSupplier, supplierDTO);
         });
 
-        inventoryVO.setProductListDTO(productListDTO);
-        return inventoryVO;
+        tbTProduct.setTbTSupplierList(tbTSupplierList);
     }
 
     @Override
@@ -158,12 +128,11 @@ public class ProductServiceImpl implements ProductService {
         Page<TbTProduct> tbTProductPage = productRepository.findAllByStatus(DbStatusEnum.ACTIVE.getValue(),
                 inventoryVO.getProductPageable());
         List<TbTProduct> tbTProductList = tbTProductPage.getContent();
-        List<ProductDTO> productListDTO = new ArrayList<>();
-
+        List<ProductWithSupplierDTO> productWithSupplierListDTO = new ArrayList<>();
 
         tbTProductList.forEach(tbTProduct -> {
 
-            ProductDTO productDTO = new ProductDTO();
+            ProductWithSupplierDTO productWithSupplierDTO = new ProductWithSupplierDTO();
             List<SupplierDTO> supplierListDTO = new ArrayList<>();
 
             tbTProduct.getTbTSupplierList().forEach(tbTSupplier -> {
@@ -172,13 +141,13 @@ public class ProductServiceImpl implements ProductService {
                 supplierListDTO.add(supplierDTO);
             });
 
-            productDTO.setSupplierListDTO(supplierListDTO);
-            BeanUtils.copyProperties(tbTProduct, productDTO);
+            productWithSupplierDTO.setSupplierListDTO(supplierListDTO);
+            BeanUtils.copyProperties(tbTProduct, productWithSupplierDTO);
 
-            productListDTO.add(productDTO);
+            productWithSupplierListDTO.add(productWithSupplierDTO);
         });
 
-        inventoryVO.setProductListDTO(productListDTO);
+        inventoryVO.setProductWithSupplierListDTO(productWithSupplierListDTO);
 
         return inventoryVO;
     }
@@ -186,12 +155,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public InventoryVO getProductById(InventoryVO inventoryVO) {
 
-        TbTProduct tbTProduct = productRepository.findByPkProductIdAndStatus(inventoryVO.getPkProductId(), DbStatusEnum.ACTIVE.getValue());
+        TbTProduct tbTProduct = productRepository.findByPkProductIdAndStatus(inventoryVO.getPkProductId(),
+                DbStatusEnum.ACTIVE.getValue());
 
         if (tbTProduct !=  null) {
 
-            ProductDTO productDTO = new ProductDTO();
-            BeanUtils.copyProperties(tbTProduct, productDTO);
+            ProductWithSupplierDTO productWithSupplierDTO = new ProductWithSupplierDTO();
+            BeanUtils.copyProperties(tbTProduct, productWithSupplierDTO);
 
             List<SupplierDTO> supplierListDTO = new ArrayList<>();
 
@@ -201,12 +171,13 @@ public class ProductServiceImpl implements ProductService {
                 supplierListDTO.add(supplierDTO);
             });
 
-            productDTO.setSupplierListDTO(supplierListDTO);
-            inventoryVO.setProductDTO(productDTO);
+            productWithSupplierDTO.setSupplierListDTO(supplierListDTO);
+            inventoryVO.setProductWithSupplierDTO(productWithSupplierDTO);
         }
 
         return inventoryVO;
     }
+
 
     @Override
     public InventoryVO deleteProductByIds(InventoryVO inventoryVO) {

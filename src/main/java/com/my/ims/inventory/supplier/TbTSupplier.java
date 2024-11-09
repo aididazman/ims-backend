@@ -3,11 +3,18 @@ package com.my.ims.inventory.supplier;
 import com.my.ims.base.domain.BaseDomain;
 import com.my.ims.util.constants.TableConstants;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.util.Objects;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = TableConstants.TB_T_SUPPLIER)
 public class TbTSupplier extends BaseDomain {
 
@@ -24,9 +31,6 @@ public class TbTSupplier extends BaseDomain {
 
     @Column(name = "contact_info")
     private String contactInfo;
-
-    @Column(name = "status")
-    private Integer status;
 
     public String getPkSupplierId() {
         return pkSupplierId;
@@ -52,14 +56,6 @@ public class TbTSupplier extends BaseDomain {
         this.contactInfo = contactInfo;
     }
 
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -68,23 +64,11 @@ public class TbTSupplier extends BaseDomain {
         TbTSupplier that = (TbTSupplier) o;
         return Objects.equals(pkSupplierId, that.pkSupplierId)
                 && Objects.equals(name, that.name)
-                && Objects.equals(contactInfo, that.contactInfo)
-                && Objects.equals(status, that.status);
+                && Objects.equals(contactInfo, that.contactInfo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), pkSupplierId, name, contactInfo, status);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("TbTSupplier{");
-        sb.append("pkSupplierId='").append(pkSupplierId).append('\'');
-        sb.append(", name='").append(name).append('\'');
-        sb.append(", contactInfo='").append(contactInfo).append('\'');
-        sb.append(", status=").append(status);
-        sb.append('}');
-        return sb.toString();
+        return Objects.hash(super.hashCode(), pkSupplierId, name, contactInfo);
     }
 }

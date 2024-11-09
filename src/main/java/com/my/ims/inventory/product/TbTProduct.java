@@ -1,21 +1,29 @@
 package com.my.ims.inventory.product;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.my.ims.base.domain.BaseDomain;
 import com.my.ims.inventory.supplier.TbTSupplier;
 import com.my.ims.util.constants.TableConstants;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@ToString
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = TableConstants.TB_T_PRODUCT)
 public class TbTProduct extends BaseDomain {
 
+    @Serial
     private static final long serialVersionUID = 8981455540079848728L;
 
     @Id
@@ -39,80 +47,13 @@ public class TbTProduct extends BaseDomain {
     @Column(name = "category")
     private String category;
 
-    @Column(name = "status")
-    private Integer status;
-
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(
             name = TableConstants.TB_M_PRODUCTSUPPLY,
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "supply_id")
     )
     private Set<TbTSupplier> tbTSupplierList = new HashSet<>();
-
-    public String getPkProductId() {
-        return pkProductId;
-    }
-
-    public void setPkProductId(String pkProductId) {
-        this.pkProductId = pkProductId;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Long getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Long quantity) {
-        this.quantity = quantity;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public Set<TbTSupplier> getTbTSupplierList() {
-        return tbTSupplierList;
-    }
-
-    public void setTbTSupplierList(Set<TbTSupplier> tbTSupplierList) {
-        this.tbTSupplierList = tbTSupplierList;
-    }
 
     public TbTProduct addSupplier(TbTSupplier tbTSupplier) {
         this.tbTSupplierList.add(tbTSupplier);
@@ -131,28 +72,12 @@ public class TbTProduct extends BaseDomain {
                 && Objects.equals(quantity, that.quantity)
                 && Objects.equals(price, that.price)
                 && Objects.equals(category, that.category)
-                && Objects.equals(status, that.status)
                 && Objects.equals(tbTSupplierList, that.tbTSupplierList);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), pkProductId, productName, description, quantity,
-                price, category, status, tbTSupplierList);
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("TbTProduct{");
-        sb.append("pkProductId='").append(pkProductId).append('\'');
-        sb.append(", productName='").append(productName).append('\'');
-        sb.append(", description='").append(description).append('\'');
-        sb.append(", quantity=").append(quantity);
-        sb.append(", price=").append(price);
-        sb.append(", category='").append(category).append('\'');
-        sb.append(", status=").append(status);
-        sb.append(", tbTSupplierList=").append(tbTSupplierList);
-        sb.append('}');
-        return sb.toString();
+                price, category, tbTSupplierList);
     }
 }

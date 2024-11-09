@@ -1,11 +1,13 @@
 package com.my.ims.base.domain;
 
 import com.my.ims.util.CommonUtil;
+import com.my.ims.util.constants.DbStatusEnum;
 import jakarta.persistence.*;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -14,6 +16,7 @@ import java.util.Objects;
 @MappedSuperclass
 public abstract class BaseDomain implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 5411963629582360949L;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -31,6 +34,9 @@ public abstract class BaseDomain implements Serializable {
     @LastModifiedBy
     @Column(name = "modified_by", length = 50)
     private String modifiedBy;
+
+    @Column(name = "status")
+    private Integer status = DbStatusEnum.ACTIVE.getValue();
 
     public LocalDateTime getCreatedDate() {
         return createdDate;
@@ -64,6 +70,10 @@ public abstract class BaseDomain implements Serializable {
         this.modifiedBy = modifiedBy;
     }
 
+    public Integer getStatus() { return status; }
+
+    public void setStatus(Integer status) { this.status = status; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,24 +82,15 @@ public abstract class BaseDomain implements Serializable {
         return Objects.equals(createdDate, that.createdDate)
                 && Objects.equals(createdBy, that.createdBy)
                 && Objects.equals(modifiedDate, that.modifiedDate)
-                && Objects.equals(modifiedBy, that.modifiedBy);
+                && Objects.equals(modifiedBy, that.modifiedBy)
+                && Objects.equals(status, that.status);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(createdDate, createdBy, modifiedDate, modifiedBy);
+        return Objects.hash(createdDate, createdBy, modifiedDate, modifiedBy, status);
     }
 
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder("BaseDomain{");
-        sb.append("createdDate=").append(createdDate);
-        sb.append(", createdBy=").append(createdBy);
-        sb.append(", modifiedDate=").append(modifiedDate);
-        sb.append(", modifiedBy=").append(modifiedBy);
-        sb.append('}');
-        return sb.toString();
-    }
 
     @PrePersist
     private void onSave() {

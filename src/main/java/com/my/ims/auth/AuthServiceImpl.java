@@ -1,9 +1,5 @@
 package com.my.ims.auth;
 
-import com.my.ims.auth.AuthVO;
-import com.my.ims.auth.JwtResponseDTO;
-import com.my.ims.auth.LoginDTO;
-import com.my.ims.auth.AuthService;
 import com.my.ims.util.security.JwtTokenProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +23,10 @@ public class AuthServiceImpl implements AuthService {
     public AuthVO login(AuthVO authVO) {
 
         LoginDTO loginDTO = authVO.getLoginDTO();
-        log.debug("Request to authenticate user");
+        log.info("Request to authenticate user");
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDTO.getUsernameOrEmail(),
+                loginDTO.getUsername(),
                 loginDTO.getPassword()
         ));
 
@@ -42,6 +38,7 @@ public class AuthServiceImpl implements AuthService {
         jwtResponseDTO.setAccessToken(token);
         authVO.setJwtResponseDTO(jwtResponseDTO);
 
+        log.info("User is authenticated successfully");
         return authVO;
     }
 }

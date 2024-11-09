@@ -38,8 +38,8 @@ public class SupplierServiceImpl implements SupplierService {
 
         if (tbTSupplier != null) {
 
-            SupplierDTO supplierDTO = new SupplierDTO();
-            BeanUtils.copyProperties(tbTSupplier, supplierDTO);
+            SupplierWithProductDTO supplierWithProductDTO = new SupplierWithProductDTO();
+            BeanUtils.copyProperties(tbTSupplier, supplierWithProductDTO);
 
             List<ProductDTO> productListDTO;
 
@@ -51,9 +51,9 @@ public class SupplierServiceImpl implements SupplierService {
             productListDTO = inventoryVO.getProductListDTO();
 
             if (!productListDTO.isEmpty())
-                supplierDTO.setProductListDTO(productListDTO);
+                supplierWithProductDTO.setProductListDTO(productListDTO);
 
-            inventoryVO.setSupplierDTO(supplierDTO);
+            inventoryVO.setSupplierDTO(supplierWithProductDTO);
         }
 
         return inventoryVO;
